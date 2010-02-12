@@ -1,0 +1,2 @@
+[{"	name"
+redis"command" bin/redis-server redis.conf"directory"Desktop/compound2/node2"	port"	6379"username"rtaljun"	host"127.0.0.1"password"magelore

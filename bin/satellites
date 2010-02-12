@@ -1,0 +1,30 @@
+require "#{File.join(File.dirname(__FILE__))}/../lib/satellites"
+
+if ARGV[0] && ARGV[1]
+  if ARGV[0] == '-r'
+    name, host, port = ARGV[1], ARGV[2], ARGV[3]
+    username, password, directory = ARGV[5], ARGV[6], ARGV[7]
+    
+    if(ARGV[8] == "start")
+      cmd = ARGV[9]
+      s = Satellites::RemoteSatellite.new name, host, port, username,
+        password, directory, ""
+      s.start
+    else
+      s = Satellites::RemoteSatellite.new name, host, port, username,
+        password, directory, ""
+      s.send(ARGV[8])
+    end
+  else
+    name, port = ARGV[0], ARGV[1]
+    
+    if(ARGV[2] == "start")
+      cmd = ARGV[3]
+      s = Satellites::Satellite.new name, port, cmd
+      s.start
+    else
+      s = Satellites::Satellite.new name, port, ""
+      s.send(ARGV[2])
+    end
+  end
+end
