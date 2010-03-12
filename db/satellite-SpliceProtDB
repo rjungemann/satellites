@@ -1,0 +1,30 @@
+"Ýo: Satellites::RemoteSatellite:
+@port"	8000:@command"env GEM_HOME=/Volumes/SpliceProtDB/lib/ruby/gems /Volumes/SpliceProtDB/bin/ruby /Volumes/SpliceProtDB/splice/script/server -p8000:
+@name"SpliceProtDB:
+@host"127.0.0.1:@password"magelore:@stdout["W03-12-2010_13-09-36 - ruby -e "Dir.mkdir 'tmp' unless File.exists? 'tmp'" #=> nil
+"w03-12-2010_13-09-39 - kill `lsof -n -i :8000 | ruby -e "STDIN.gets; puts STDIN.gets.split[1] rescue nil"` #=> nil
+"ƒ03-12-2010_13-09-40 - cd /Volumes/SpliceProtDB && rm tmp/SpliceProtDB.pid #=> rm: tmp/SpliceProtDB.pid: No such file or directory
+
+"w03-12-2010_13-10-16 - kill `lsof -n -i :8000 | ruby -e "STDIN.gets; puts STDIN.gets.split[1] rescue nil"` #=> nil
+"ƒ03-12-2010_13-10-16 - cd /Volumes/SpliceProtDB && rm tmp/SpliceProtDB.pid #=> rm: tmp/SpliceProtDB.pid: No such file or directory
+
+"z03-12-2010_13-10-56 - kill -9 `lsof -n -i :8000 | ruby -e "STDIN.gets; puts STDIN.gets.split[1] rescue nil"` #=> nil
+"ƒ03-12-2010_13-10-56 - cd /Volumes/SpliceProtDB && rm tmp/SpliceProtDB.pid #=> rm: tmp/SpliceProtDB.pid: No such file or directory
+
+"å03-12-2010_13-11-03 - cd /Volumes/SpliceProtDB && /usr/bin/dtach -n tmp/SpliceProtDB.dtach env GEM_HOME=/Volumes/SpliceProtDB/lib/ruby/gems /Volumes/SpliceProtDB/bin/ruby /Volumes/SpliceProtDB/splice/script/server -p8000 #=> nil
+"¥03-12-2010_13-11-03 - cd /Volumes/SpliceProtDB && echo `lsof -n -i :8000 | ruby -e "STDIN.gets; puts STDIN.gets.split[1] rescue nil"` > tmp/SpliceProtDB.pid #=> nil
+"z03-12-2010_13-11-46 - kill -9 `lsof -n -i :8000 | ruby -e "STDIN.gets; puts STDIN.gets.split[1] rescue nil"` #=> nil
+"W03-12-2010_13-11-47 - cd /Volumes/SpliceProtDB && rm tmp/SpliceProtDB.pid #=> nil
+"å03-12-2010_13-11-59 - cd /Volumes/SpliceProtDB && /usr/bin/dtach -n tmp/SpliceProtDB.dtach env GEM_HOME=/Volumes/SpliceProtDB/lib/ruby/gems /Volumes/SpliceProtDB/bin/ruby /Volumes/SpliceProtDB/splice/script/server -p8000 #=> nil
+"¥03-12-2010_13-11-59 - cd /Volumes/SpliceProtDB && echo `lsof -n -i :8000 | ruby -e "STDIN.gets; puts STDIN.gets.split[1] rescue nil"` > tmp/SpliceProtDB.pid #=> nil
+"z03-12-2010_13-23-58 - kill -9 `lsof -n -i :8000 | ruby -e "STDIN.gets; puts STDIN.gets.split[1] rescue nil"` #=> nil
+"W03-12-2010_13-23-58 - cd /Volumes/SpliceProtDB && rm tmp/SpliceProtDB.pid #=> nil
+"å03-12-2010_13-24-04 - cd /Volumes/SpliceProtDB && /usr/bin/dtach -n tmp/SpliceProtDB.dtach env GEM_HOME=/Volumes/SpliceProtDB/lib/ruby/gems /Volumes/SpliceProtDB/bin/ruby /Volumes/SpliceProtDB/splice/script/server -p8000 #=> nil
+"¥03-12-2010_13-24-04 - cd /Volumes/SpliceProtDB && echo `lsof -n -i :8000 | ruby -e "STDIN.gets; puts STDIN.gets.split[1] rescue nil"` > tmp/SpliceProtDB.pid #=> nil
+"å03-12-2010_13-28-47 - cd /Volumes/SpliceProtDB && /usr/bin/dtach -n tmp/SpliceProtDB.dtach env GEM_HOME=/Volumes/SpliceProtDB/lib/ruby/gems /Volumes/SpliceProtDB/bin/ruby /Volumes/SpliceProtDB/splice/script/server -p8000 #=> nil
+"¥03-12-2010_13-28-47 - cd /Volumes/SpliceProtDB && echo `lsof -n -i :8000 | ruby -e "STDIN.gets; puts STDIN.gets.split[1] rescue nil"` > tmp/SpliceProtDB.pid #=> nil
+"z03-12-2010_13-31-32 - kill -9 `lsof -n -i :8000 | ruby -e "STDIN.gets; puts STDIN.gets.split[1] rescue nil"` #=> nil
+"W03-12-2010_13-31-32 - cd /Volumes/SpliceProtDB && rm tmp/SpliceProtDB.pid #=> nil
+"å03-12-2010_13-31-34 - cd /Volumes/SpliceProtDB && /usr/bin/dtach -n tmp/SpliceProtDB.dtach env GEM_HOME=/Volumes/SpliceProtDB/lib/ruby/gems /Volumes/SpliceProtDB/bin/ruby /Volumes/SpliceProtDB/splice/script/server -p8000 #=> nil
+"¥03-12-2010_13-31-34 - cd /Volumes/SpliceProtDB && echo `lsof -n -i :8000 | ruby -e "STDIN.gets; puts STDIN.gets.split[1] rescue nil"` > tmp/SpliceProtDB.pid #=> nil
+:@dtach_path"/usr/bin/dtach:@username"rtaljun:@tmp_path"tmp:@directory"/Volumes/SpliceProtDB

@@ -16,22 +16,21 @@ module Satellites
   end
   
   class Satellite < AbstractSatellite
-    attr_accessor :tmp_path, :dtach_path
+    attr_accessor :name, :port, :command, :tmp_path, :dtach_path, :stdout
     
-    def initialize name, port, cmd
-      @name, @port, @cmd = name, port, cmd
+    def initialize name, port, command
+      @name, @port, @command = name, port, command
+      @tmp_path, @dtach_path = "tmp", "dtach"
+      @stdout = []
       
-      @tmp_path = "tmp"
-      @dtach_path = "dtach"
-      
-      `mkdir #{@tmp_path}` unless File.exists? @tmp_path
+      run "mkdir #{@tmp_path}" unless File.exists?(@tmp_path)
     end
     
     def start
-      `#{@dtach_path} -n tmp/#{@name}.dtach #{@cmd}`
+      run "#{@dtach_path} -n tmp/#{@name}.dtach #{@command}"
       
       File.open("#{@tmp_path}/#{@name}.pid", "w") do |f|
-        f.puts(portpid @port)
+        f.puts(portpid)
       end
     end
     
@@ -39,52 +38,58 @@ module Satellites
     def attach; exec "#{@dtach_path} -a tmp/#{@name}.dtach" end
     
     def stop
-      `kill #{portpid @port}`
-      `rm #{@tmp_path}/#{@name}.pid`
+      run "kill -9 #{portpid}"
+      run "rm #{@tmp_path}/#{@name}.pid"
     end
     
-    def alive?; not portpid(@port).blank? end
+    def alive?; not portpid.blank? end
     
     private
     
-    def portpid port
-      `lsof -n -i :#{port} | ruby -e "STDIN.gets; puts STDIN.gets.split[1] rescue nil"`
+    def run command
+      @stdout << ("#{time} - " + command + " #=> " + (`#{command}` || "nil") + "\n")
     end
+    
+    def portpid_string
+      "lsof -n -i :#{@port} | ruby -e \"STDIN.gets; puts STDIN.gets.split[1] rescue nil\""
+    end
+    
+    def portpid; run portpid_string end
+    def time; Time.now.strftime("%m-%d-%Y_%H-%M-%S") end
   end
   
   class RemoteSatellite < AbstractSatellite
-    attr_reader :stdout
+    attr_accessor :stdout
     attr_accessor :tmp_path, :dtach_path
+    attr_accessor :name, :host, :port, :username, :password, :directory, :command
     
-    def initialize name, host, port, username, password, directory, cmd
+    def initialize name, host, port, username, password, directory, command
       @name, @host, @port = name, host, port
-      @username, @password, @directory, @cmd = username, password, directory, cmd
+      @username, @password, @directory, @command = username, password, directory, command
+      @tmp_path, @dtach_path = "tmp", "/usr/bin/dtach"
       @stdout = []
       
-      @tmp_path = "tmp"
-      @dtach_path = "bin/dtach"
-      
-      `mkdir #{@tmp_path}` unless File.exists? @tmp_path
+      net_ssh %{ruby -e "Dir.mkdir '#{@tmp_path}' unless File.exists? '#{@tmp_path}'"}
     end
     
     def start
-      net_ssh "cd #{@directory} && #{@dtach_path} -n tmp/#{@name}.dtach #{@cmd}",
+      net_ssh "cd #{@directory} && #{@dtach_path} -n tmp/#{@name}.dtach #{@command}",
         "cd #{@directory} && echo `#{portpid_string}` > tmp/#{@name}.pid"
     end
     
     def restart
-      net_ssh "kill #{portpid_string}",
+      net_ssh "kill -9 #{portpid_string}",
         "cd #{@directory} && rm #{@tmp_path}/#{@name}.pid",
-        "cd #{@directory} && #{@dtach_path} -n tmp/#{@name}.dtach #{@cmd}",
+        "cd #{@directory} && #{@dtach_path} -n tmp/#{@name}.dtach #{@command}",
         "cd #{@directory} && echo `#{portpid_string}` > tmp/#{@name}.pid"
     end
     
     def stop
-      net_ssh "kill `#{portpid_string}`",
+      net_ssh "kill -9 `#{portpid_string}`",
         "cd #{@directory} && rm #{@tmp_path}/#{@name}.pid"
     end
     
-    def alive? &block
+    def alive?
       data = nil
       
       Net::SSH.start(@host, @username, :password => @password) do |ssh|
@@ -96,18 +101,18 @@ module Satellites
     
     private
     
+    def net_ssh *commands
+      Net::SSH.start(@host, @username, :password => @password) do |ssh|
+        commands.each do |command|
+          @stdout << ("#{time} - " + command + " #=> " + (ssh.exec!(command) || "nil") + "\n")
+        end
+      end
+    end
+    
     def portpid_string
       "lsof -n -i :#{@port} | ruby -e \"STDIN.gets; puts STDIN.gets.split[1] rescue nil\""
     end
     
-    def net_ssh *commands
-      Net::SSH.start(@host, @username, :password => @password) do |ssh|
-        commands.each do |command|
-          ssh.exec!(command) do |channel, stream, data|
-            @stdout << data
-          end
-        end
-      end
-    end
+    def time; Time.now.strftime("%m-%d-%Y_%H-%M-%S") end
   end
 end

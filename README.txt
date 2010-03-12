@@ -1,6 +1,10 @@
 Satellites
 by Roger Jungemann (MIT License)
 
+To do
+* Automatic process monitoring
+* Make sure objects get written after running a command to persist the output.
+
 Satellites is a library for starting and stopping servers, locally or
 remotely, either through the command line, Ruby scripts, or a web service.
 

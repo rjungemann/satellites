@@ -1,0 +1,22 @@
+"Êo: Satellites::RemoteSatellite:
+@portië:@command" bin/redis-server redis.conf:
+@name"
+redis:@stdout["W02-14-2010_00-02-22 - ruby -e "Dir.mkdir 'tmp' unless File.exists? 'tmp'" #=> nil
+"w02-15-2010_10-01-21 - kill `lsof -n -i :6379 | ruby -e "STDIN.gets; puts STDIN.gets.split[1] rescue nil"` #=> nil
+"R02-15-2010_10-01-21 - cd Desktop/compound2/node2 && rm tmp/redis.pid #=> nil
+"z02-15-2010_10-08-15 - cd Desktop/compound2/node2 && bin/dtach -n tmp/redis.dtach bin/redis-server redis.conf #=> nil
+" 02-15-2010_10-08-15 - cd Desktop/compound2/node2 && echo `lsof -n -i :6379 | ruby -e "STDIN.gets; puts STDIN.gets.split[1] rescue nil"` > tmp/redis.pid #=> nil
+"w02-15-2010_10-09-56 - kill `lsof -n -i :6379 | ruby -e "STDIN.gets; puts STDIN.gets.split[1] rescue nil"` #=> nil
+"R02-15-2010_10-09-57 - cd Desktop/compound2/node2 && rm tmp/redis.pid #=> nil
+"z02-15-2010_10-11-12 - cd Desktop/compound2/node2 && bin/dtach -n tmp/redis.dtach bin/redis-server redis.conf #=> nil
+" 02-15-2010_10-11-12 - cd Desktop/compound2/node2 && echo `lsof -n -i :6379 | ruby -e "STDIN.gets; puts STDIN.gets.split[1] rescue nil"` > tmp/redis.pid #=> nil
+"Ï03-12-2010_13-23-38 - kill -9 `lsof -n -i :6379 | ruby -e "STDIN.gets; puts STDIN.gets.split[1] rescue nil"` #=> kill: usage: kill [-s sigspec | -n signum | -sigspec] pid | jobspec ... or kill -l [sigspec]
+
+"03-12-2010_13-23-38 - cd Desktop/compound2/node2 && rm tmp/redis.pid #=> bash: line 0: cd: Desktop/compound2/node2: No such file or directory
+
+"Ï03-12-2010_13-23-42 - kill -9 `lsof -n -i :6379 | ruby -e "STDIN.gets; puts STDIN.gets.split[1] rescue nil"` #=> kill: usage: kill [-s sigspec | -n signum | -sigspec] pid | jobspec ... or kill -l [sigspec]
+
+"03-12-2010_13-23-43 - cd Desktop/compound2/node2 && rm tmp/redis.pid #=> bash: line 0: cd: Desktop/compound2/node2: No such file or directory
+
+:
+@host"127.0.0.1:@password"magelore:@dtach_path"bin/dtach:@username"rtaljun:@tmp_path"tmp:@directory"Desktop/compound2/node2

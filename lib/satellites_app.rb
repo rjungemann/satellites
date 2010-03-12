@@ -1,19 +1,40 @@
 module Satellites
   class App < Sinatra::Base
     configure do
-      set :db, Moneta::File.new(:path => "#{File.dirname(__FILE__)}/../db")
+      db = Moneta::File.new(:path => "#{File.dirname(__FILE__)}/../db")
+      
+      set :db, db
+      
+      db["satellites"] ||= []
+      
+      unless db["satellite-redis"]
+        satellite = Satellites::RemoteSatellite.new "redis", "127.0.0.1", 6379,
+          "rtaljun", "magelore", "Desktop/compound2/node2", "bin/redis-server redis.conf"
+        db["satellites"] = db["satellites"] << "redis"
+        db["satellite-redis"] = Marshal.dump satellite
+      end
     end
     
     get "/" do
-      @models = options.db["satellites"] || []
+      @db = options.db
+      @models = @db["satellites"] || []
       
-      @satellites = @models.collect do |model|
-        Satellites::RemoteSatellite.new model["name"], model["host"],
-          model["port"], model["username"], model["password"], model["directory"],
-          model["command"]
+      @satellites = @models.collect do |name|
+        model = @db["satellite-#{name}"]
+        
+        Marshal.load(model)
       end
       
       erb :index
+    end
+    
+    get "/:name/logs" do
+      content_type 'text/plain', :charset => 'utf-8'
+      
+      model = options.db["satellite-#{params[:name]}"]
+      satellite = Marshal.load(model)
+      
+      satellite.stdout.reverse.join("\n")
     end
     
     post "/create" do
@@ -21,14 +42,12 @@ module Satellites
       username, password = params[:username], params[:password]
       directory, command = params[:directory], params[:command]
       
-      @model = options.db["satellite-#{name}"] = {
-        "name" => name, "host" => host, "port" => port,
-        "username" => username, "password" => password,
-        "directory" => directory, "command" => command
-      }
+      @satellite = Satellites::RemoteSatellite.new(name, host, port,
+        username, password, directory, command)
       @satellites = options.db["satellites"] || []
       
-      options.db["satellites"] = @satellites << @model
+      options.db["satellites"] = @satellites << name
+      options.db["satellite-#{name}"] = Marshal.dump(@satellite)
       
       redirect "/"
     end
@@ -37,9 +56,12 @@ module Satellites
       name = params[:name]
       
       @satellites = options.db["satellites"] || []
-      @satellites.reject! { |satellite| satellite["name"] == name }
+      @satellites.reject! { |n| name == n }
       
       options.db["satellites"] = @satellites
+      options.db["satellites-#{name}"] = nil
+      
+      destroy_command name
       
       redirect "/"
     end
@@ -47,16 +69,27 @@ module Satellites
     post "/:name/:command" do
       name, command = params[:name], params[:command]
       
-      @satellites = options.db["satellites"] || []
       @model = options.db["satellite-#{name}"]
-      
-      @satellite = Satellites::RemoteSatellite.new @model["name"], @model["host"],
-        @model["port"], @model["username"], @model["password"], @model["directory"],
-        @model["command"]
+      @satellite = Marshal.load(@model)
         
       @satellite.send command
       
+      options.db["satellite-#{name}"] = Marshal.dump(@satellite)
+      
       redirect "/"
     end
+  end
+  
+  private
+  
+  def destroy_command name
+    commands = options.db["commands"]
+    if commands
+      commands.reject! { |n| n == name }
+      
+      options.db["commands"] = command
+    end
+    
+    options.db["command-#{name}"] = nil
   end
 end

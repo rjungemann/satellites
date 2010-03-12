@@ -1,0 +1,40 @@
+<% unless @models.blank? %>
+  <h2>Run a command on an existing satellite</h2>
+  
+  <table>
+    <th>Name</th>
+    <th>Location</th>
+    <th>Username</th>
+    <th>Directory</th>
+    <th></th>
+    
+    <% @commands.each do |command| %>
+      <tr>
+        <td><%= command.name %></td>
+        <td><%= command.host %>:<%= command.port %></td>
+        <td><%= command.username %></td>
+        <td><%= command.directory %></td>
+        
+        <td>
+          <form style="display: inline;" action="/commands/<%= command.name %>/run" method="post">
+            <input type="text" name="command">
+            
+            <input type="submit" value="run">
+          </form>
+          
+          <form style="display: inline;" action="/commands/<%= command.name %>/logs" method="get">
+            <input type="submit" value="logs">
+          </form>
+        </td>
+      </tr>
+      
+      <% unless command.stdout.blank? %>
+        <tr><td colspan="7" style="padding-left: 40px; padding-top: 15px; font-family: monospace; font-size: 0.8em;">
+          <% command.stdout.each do |s| %>
+            <div><%= s %></div>
+          <% end %>
+        </td></tr>
+      <% end %>
+    <% end %>
+  </table>
+<% end %>

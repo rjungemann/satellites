@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="/styles/reset.css">
+<link rel="stylesheet" href="/styles/960.css">
+<link rel="stylesheet" href="/styles/960_24_col.css">
+<link rel="stylesheet" href="/styles/text.css">
+
+<style>
+  html, body { width: 100%; }
+  * { letter-spacing: -0.075em; }
+  h1, h2, h3, h4, h5, h6 { letter-spacing: -0.05em; }
+  #header {
+    width: 100%;
+    background-color: #cccccc;
+    border-bottom: 2px solid #999999;
+    height: 40px;
+    margin-bottom: 20px;
+    padding-top: 10px;
+  }
+  #header > h1 {
+    position: absolute;
+    left: 10px;
+  }
+  #content { margin: 10px; }
+  th { text-align: left; }
+  th, td { padding: 4px; }
+</style>
+
+<div id="header">
+  <h1>Satellites
+    <span style="font-size: 0.6em; padding-left: 10px;">
+      <a href="/">Satellites</a>
+      <a href="/commands/">Commands</a>
+    </span>
+  </h1>
+</div>
+
+<div id="content">
+  <%= yield %>
+  
+  <hr>
+
+  <p>Created by <a href="mailto:roger@thefifthcircuit.com">Roger Jungemann</a>. Copyright 2010, <a href="http://thefifthcircuit.com">thefifthcircuit</a>. Licensed under the MIT license.</p>
+</div>

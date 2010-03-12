@@ -1,137 +1,104 @@
-<link rel="stylesheet" href="/styles/reset.css">
-<link rel="stylesheet" href="/styles/960.css">
-<link rel="stylesheet" href="/styles/960_24_col.css">
-<link rel="stylesheet" href="/styles/text.css">
+<h2>Satellites is a process management tool.</h2>
 
-<style>
-  html, body {
-    width: 100%;
-  }
-  * {
-    letter-spacing: -0.075em;
-  }
-  h1, h2, h3, h4, h5, h6 {
-    letter-spacing: -0.05em;
-  }
-  #header {
-    width: 100%;
-    background-color: #cccccc;
-    border-bottom: 2px solid #999999;
-    height: 40px;
-    margin-bottom: 20px;
-    padding-top: 10px;
-  }
-  #header > h1 {
-    position: absolute;
-    left: 10px;
-  }
-  #content {
-    margin: 10px;
-  }
-  th {
-    text-align: left;
-  }
-  th, td {
-    padding: 4px;
-  }
-</style>
+<p>Use Satellites to daemonize and manage your processes. Start and stop your databases, your servers, and your workers easily using this tool.</p>
 
-<div id="header">
-  <h1>Satellites</h1>
-</div>
+<hr>
 
-<div id="content">
-  <h2>Satellites is a process management tool.</h2>
-
-  <p>Use Satellites to daemonize and manage your processes. Start and stop your databases, your servers, and your workers easily using this tool.</p>
-
-  <hr>
+<% unless @satellites.blank? %>
+  <h2>Current satellites</h2>
   
-  <% unless @models.blank? %>
-    <h2>Current satellites</h2>
+  <table>
+    <th>Name</th>
+    <th>Location</th>
+    <th>Username</th>
+    <th>Directory</th>
+    <th>Command</th>
+    <th>Alive?</th>
+    <th></th>
     
-    <table>
-      <th>Name</th>
-      <th>Location</th>
-      <th>Username</th>
-      <th>Directory</th>
-      <th>Command</th>
-      <th>Alive?</th>
-      <th></th>
-      
-      <% @models.each_with_index do |model, i| %>
-        <tr>
-          <td><%= model["name"] %></td>
-          <td><%= model["host"] %>:<%= model["port"] %></td>
-          <td><%= model["username"] %></td>
-          <td><%= model["directory"] %></td>
-          <td><%= model["command"] %></td>
-          <td style="color: <%= @satellites[i].alive? ? "#00ff00" : "#ff0000" %>"><%= @satellites[i].alive? %></td>
-          
-          <td>
-            <form style="display: inline;" action="/<%= model["name"] %>/start" method="post">
-              <input type="submit" value="start">
-            </form>
-            
-            <form style="display: inline;" action="/<%= model["name"] %>/stop" method="post">
-              <input type="submit" value="stop">
-            </form>
-            
-            <form style="display: inline;" action="/<%= model["name"] %>/restart" method="post">
-              <input type="submit" value="restart">
-            </form>
-            
-            <form style="display: inline;" action="/<%= model["name"] %>/destroy" method="post">
-              <input type="submit" value="destroy">
-            </form>
-          </td>
-        </tr>
-      <% end %>
-    </table>
-    
-    <hr>
-  <% end %>
-  
-  <h2>Create a new satellite</h2>
-  
-  <form action="/create" method="post">
-    <table border="0">
+    <% @satellites.each_with_index do |satellite, i| %>
       <tr>
-        <td><b>Name</b></td>
-        <td><input type="text" name="name"></td>
-      </tr>
-      
-      <tr>
-        <td><b>Location</b></td>
-        <td>
-          <input type="text" name="host"> : <input type="text" name="port">
-        </td>
-      </tr>
-      
-      <tr>
-        <td><b>Username/Password</b></td>
+        <td><%= satellite.name %></td>
+        <td><%= satellite.host %>:<%= satellite.port %></td>
+        <td><%= satellite.username %></td>
+        <td><%= satellite.directory %></td>
+        <td><%= satellite.command %></td>
+        
+        <% alive = satellite.alive? %>
+        
+        <td style="color: <%= alive ? '#00ff00' : '#ff0000' %>"><%= alive %></td>
         
         <td>
-          <input type="text" name="username"> /
-          <input type="password" name="password">
+          <form style="display: inline;" action="/<%= satellite.name %>/start" method="post">
+            <input type="submit" value="start">
+          </form>
+          
+          <form style="display: inline;" action="/<%= satellite.name %>/stop" method="post">
+            <input type="submit" value="stop">
+          </form>
+          
+          <form style="display: inline;" action="/<%= satellite.name %>/restart" method="post">
+            <input type="submit" value="restart">
+          </form>
+          
+          <form style="display: inline;" action="/<%= satellite.name %>/destroy" method="post">
+            <input type="submit" value="destroy">
+          </form>
+          
+          <form style="display: inline;" action="/<%= satellite.name %>/logs" method="get">
+            <input type="submit" value="logs">
+          </form>
         </td>
       </tr>
       
-      <tr>
-        <td><b>Directory</b></td>
-        <td><input type="text" name="directory"></td>
-      </tr>
-      
-      <tr>
-        <td><b>Command</b></td>
-        <td><input type="text" name="command"></td>
-      </tr>
-    </table>
-    
-    <input type="submit" value="Submit">
-  </form>
+      <% unless satellite.stdout.blank? %>
+        <tr><td colspan="7" style="padding-left: 40px; padding-top: 15px; font-family: monospace; font-size: 0.8em;">
+          <% satellite.stdout.reverse.each do |s| %>
+            <div><%= s %></div>
+          <% end %>
+        </td></tr>
+      <% end %>
+    <% end %>
+  </table>
   
   <hr>
+<% end %>
 
-  <p>Created by <a href="mailto:roger@thefifthcircuit.com">Roger Jungemann</a>. Copyright 2010, <a href="http://thefifthcircuit.com">thefifthcircuit</a>. Licensed under the MIT license.</p>
-</div>
+<h2>Create a new satellite</h2>
+
+<form action="/create" method="post">
+  <table border="0">
+    <tr>
+      <td><b>Name</b></td>
+      <td><input type="text" name="name"></td>
+    </tr>
+    
+    <tr>
+      <td><b>Location</b></td>
+      <td>
+        <input type="text" name="host"> : <input type="text" name="port">
+      </td>
+    </tr>
+    
+    <tr>
+      <td><b>Username/Password</b></td>
+      
+      <td>
+        <input type="text" name="username"> /
+        <input type="password" name="password">
+      </td>
+    </tr>
+    
+    <tr>
+      <td><b>Directory</b></td>
+      <td><input type="text" name="directory"></td>
+    </tr>
+    
+    <tr>
+      <td><b>Command</b></td>
+      <td><input type="text" name="command"></td>
+    </tr>
+  </table>
+  
+  <input type="submit" value="Submit">
+</form>
