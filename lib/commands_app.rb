@@ -67,7 +67,7 @@ module Satellites
       @stdout = []
     end
     
-    def run command; net_ssh command end
+    def run command; net_ssh "cd #{@directory} && #{command}" end
     
     private
     

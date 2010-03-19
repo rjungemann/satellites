@@ -6,13 +6,6 @@ module Satellites
       set :db, db
       
       db["satellites"] ||= []
-      
-      unless db["satellite-redis"]
-        satellite = Satellites::RemoteSatellite.new "redis", "127.0.0.1", 6379,
-          "rtaljun", "magelore", "Desktop/compound2/node2", "bin/redis-server redis.conf"
-        db["satellites"] = db["satellites"] << "redis"
-        db["satellite-redis"] = Marshal.dump satellite
-      end
     end
     
     get "/" do

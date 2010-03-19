@@ -73,14 +73,14 @@ module Satellites
     end
     
     def start
-      net_ssh "cd #{@directory} && #{@dtach_path} -n tmp/#{@name}.dtach #{@command}",
+      net_ssh "cd #{@directory} && #{@dtach_path} -n tmp/#{@name}.dtach cd #{@directory} && #{@command}",
         "cd #{@directory} && echo `#{portpid_string}` > tmp/#{@name}.pid"
     end
     
     def restart
       net_ssh "kill -9 #{portpid_string}",
         "cd #{@directory} && rm #{@tmp_path}/#{@name}.pid",
-        "cd #{@directory} && #{@dtach_path} -n tmp/#{@name}.dtach #{@command}",
+        "cd #{@directory} && #{@dtach_path} -n tmp/#{@name}.dtach cd #{@directory} && #{@command}",
         "cd #{@directory} && echo `#{portpid_string}` > tmp/#{@name}.pid"
     end
     
