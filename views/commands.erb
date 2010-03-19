@@ -29,7 +29,7 @@
       </tr>
       
       <% unless command.stdout.blank? %>
-        <tr><td colspan="7" style="padding-left: 40px; padding-top: 15px; font-family: monospace; font-size: 0.8em;">
+        <tr><td colspan="7" style="padding-left: 40px; padding-bottom: 15px; font-family: monospace; font-size: 0.8em; color: #999999;">
           <% command.stdout.each do |s| %>
             <div><%= s %></div>
           <% end %>

@@ -6,6 +6,12 @@ module Satellites
       set :db, db
       
       db["satellites"] ||= []
+      
+      if db["satellites"].size < 1
+        Dir.glob("#{File.dirname(__FILE__)}/../media/recipes/*").each do |f|
+          eval(File.open(f).read)
+        end
+      end
     end
     
     get "/" do
