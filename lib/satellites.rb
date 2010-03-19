@@ -20,7 +20,7 @@ module Satellites
     
     def initialize name, port, command
       @name, @port, @command = name, port, command
-      @tmp_path, @dtach_path = "tmp", "dtach"
+      @tmp_path, @dtach_path = "tmp", "/Volumes/SpliceProtDB/dtach"
       @stdout = []
       
       run "mkdir #{@tmp_path}" unless File.exists?(@tmp_path)
@@ -66,7 +66,7 @@ module Satellites
     def initialize name, host, port, username, password, directory, command
       @name, @host, @port = name, host, port
       @username, @password, @directory, @command = username, password, directory, command
-      @tmp_path, @dtach_path = "tmp", "/usr/bin/dtach"
+      @tmp_path, @dtach_path = "tmp", "/Volumes/SpliceProtDB/bin/dtach"
       @stdout = []
       
       net_ssh %{ruby -e "Dir.mkdir '#{@tmp_path}' unless File.exists? '#{@tmp_path}'"}

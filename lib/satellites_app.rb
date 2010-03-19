@@ -61,7 +61,14 @@ module Satellites
       options.db["satellites"] = @satellites
       options.db["satellites-#{name}"] = nil
       
-      destroy_command name
+      commands = options.db["commands"]
+      if commands
+        commands.reject! { |n| n == name }
+
+        options.db["commands"] = commands
+      end
+
+      options.db["command-#{name}"] = nil
       
       redirect "/"
     end
@@ -78,18 +85,5 @@ module Satellites
       
       redirect "/"
     end
-  end
-  
-  private
-  
-  def destroy_command name
-    commands = options.db["commands"]
-    if commands
-      commands.reject! { |n| n == name }
-      
-      options.db["commands"] = command
-    end
-    
-    options.db["command-#{name}"] = nil
   end
 end
